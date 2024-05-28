@@ -1,8 +1,16 @@
 
+#include <utility>
 #if not defined(_LIBCPP_IOSTREAM)
     #include <iostream>
 #endif
-#include <vector>
+
+#if not defined(_LIBCPP_VECTOR)
+    #include <vector>
+#endif
+
+#if not defined(_LIBCPP_MAP)
+    #include <map>
+#endif
 
 #include "../headers/structures.h"
 
@@ -12,14 +20,37 @@
 #define RED    31
 #define YELLOW 33
 
-unsigned long passed, total, total_pass, total_total, absolute_pass, absolute_total, index_, extra;
+
+unsigned long passed, total, total_pass, total_total, absolute_pass, absolute_total;
+
+
+
+
+// void print_with_nums(const char* the_string, unsigned long pass, unsigned long tot, bool nl = true) {
+//     #if defined(unix_os)
+//         std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
+//     #else
+//         std::printf("%s%lu/%lu\n", the_string, pass, tot);
+//     #endif
+// }
+
+// void print_just_words(const char* the_string, bool nl = true, unsigned short color = GREEN) {
+//     #if defined(unix_os) 
+//         std::printf("\x1B[1;%u49m%s\x1B[0m%c", color, the_string, (nl) ? '\n' : 0);
+//     #else
+//         std::printf("%s%c", the_string, (nl) ? '\n' : 0);
+//     #endif
+// }
+
+
+unsigned long index_, extra;
 
 std::vector<std::string> imagine_dragons_lyrics, imagine_dragons_lyrics_caps;
 std::vector<unsigned long> line_lengths;
 
 void init();
 
-void print_results(char* the_string, unsigned long pass, unsigned long tot);
+void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl = true);
 
 bool compare_with_case(std::string& first, std::string& second);
 
@@ -29,11 +60,9 @@ void update_tests(bool the_test);
 
 void linked_list_tests();
 
-
 int main() {
     init();
-    linked_list_tests();
-    print_results((char *) "\tLinked List Test Results\t:\t", total_pass, total_total);
+    // print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
 }
 
 
@@ -140,17 +169,16 @@ void init() {
         line_lengths.push_back(imagine_dragons_lyrics[index_].length());
         imagine_dragons_lyrics_caps.push_back(this_line);
     }
-    passed = total = total_pass = total_total = extra = 0;
 }
 
-
-void print_results(char* the_string, unsigned long pass, unsigned long tot) {
+void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl) {
     #if defined(unix_os)
-        std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m\n", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot);
+        std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
     #else
         std::printf("%s%lu/%lu\n", the_string, pass, tot);
     #endif
 }
+
 
 bool compare_with_case(std::string& first, std::string& second) {
     return useful_functions::same_string(first.c_str(), second.c_str(), false);
@@ -169,32 +197,15 @@ void update_tests(bool the_test) {
     absolute_total++;
 }
 
-void linked_list_tests() {
-    passed = total = total_pass = total_total = 0;
-    Data_Structures::linked_list<std::string> string_list;
-    Data_Structures::linked_list<unsigned long> long_list;
-    Data_Structures::linked_list<Data_Structures::linked_list<std::string> > nested_list;
-    /*
-        Some tests here
-    */
-    update_tests(string_list.length() == 0);
-    update_tests(string_list.empty());
-    update_tests(long_list.length() == 0);
-    update_tests(long_list.empty());
-    update_tests(nested_list.length() == 0);
-    update_tests(nested_list.empty());
-    print_results((char *) "\t\tCorrectly initialized with a size of 0\t:\t", passed, total);
-    
-    passed = total = 0;
-    update_tests(string_list.destruct_and_throw());
-    update_tests(long_list.destruct_and_throw());
-    update_tests(nested_list.destruct_and_throw());
-    string_list.destruct_and_throw(false);
-    long_list.destruct_and_throw(false);
-    nested_list.destruct_and_throw(false);
-    update_tests(!string_list.destruct_and_throw());
-    update_tests(!long_list.destruct_and_throw());
-    update_tests(!nested_list.destruct_and_throw());
-    print_results((char *) "\t\tCorrectly initialized with proper flag for what to do if an exception is thrown\t:\t", passed, total);
 
+void linked_list_tests() {
+
+    std::printf("linked list tests:\n");
+    passed = total = 0;
+    Data_Structures::linked_list<std::string> string_list;
+    update_tests(string_list.empty());
+    update_tests(string_list.length() == 0);
+    update_tests(!string_list);
+    update_tests(string_list.throws_and_distructs());
+    print_results((char *) "\tCorrectly initialized a Linked list : ", passed, total);
 }

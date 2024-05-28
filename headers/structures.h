@@ -166,42 +166,20 @@ namespace Data_Structures {
 
     namespace {
 
-        // void* null_data = 0;
-        // void** null_ptr = &null_data;
+        template <typename data_> class base_node {
 
-        template <typename data_> class basic_node {
-            protected:
+            private:
                 data_ node_data;
 
             public:
+                base_node() {}
 
-                basic_node() {}
-
-                basic_node(data_ new_data) {
-                    this->node_data = new_data;
+                base_node(data_ data) {
+                    this->node_data = data;
                 }
 
-                basic_node(basic_node<data_>& other_node) {
-                    if (this != &other_node) {
-                        this->node_data = other_node.node_data;
-                    }
-                }
-
-                basic_node(basic_node<data_>* other_node) {
-                    if (this != other_node) {
-                        this->node_data = other_node->node_data;
-                    }
-                }
-
-                basic_node<data_>& operator=(basic_node<data_>& other) {
-                    if (this != &other) {
-                        this->node_data = other.node_data;
-                    }
-                    return *this;
-                }
-
-                void update_data(const data_ new_data) {
-                    this->node_data = new_data;
+                void set_data(data_ data) {
+                    this->node_data = data;
                 }
 
                 data_ get_data() const {
@@ -215,42 +193,40 @@ namespace Data_Structures {
         };
 
 
-        template <typename data_> class single_linear_node : public basic_node<data_> {
+        template <typename data_> class single_linear_node : public base_node<data_> {
 
-            protected:
+            private:
                 single_linear_node<data_>* next;
 
             public:
 
-                single_linear_node() : basic_node<data_>() {
+                single_linear_node() : base_node<data_>() {
                     this->next = nullptr;
                 }
 
-                single_linear_node(data_ data) : basic_node<data_>(data) {
+                single_linear_node(data_ data) : base_node<data_>(data) {
                     this->next = nullptr;
                 }
 
-                void update_next(const single_linear_node<data_>* next_node) {
-                    this->next = next_node;
+                single_linear_node(const single_linear_node<data_>* other) {
+                    if (this != &other) {
+                        this = &other;
+                    }
+                }
+
+                void update_next(single_linear_node<data_>* new_next) {
+                    this->next = new_next;
                 }
 
                 single_linear_node<data_>* get_next() const {
                     return this->next;
                 }
 
-                single_linear_node<data_>& peek_next() {
-                    return this->next;
-                }
-
-                single_linear_node<data_>& operator++() {
-                    this = this->next;
-                    return *this;
-                }
-
-                single_linear_node<data_>& operator++(int) {
-                    single_linear_node<data_>& the_answer = *this;
-                    ++(this);
-                    return the_answer;
+                single_linear_node<data_>* operator=(single_linear_node<data_>* other) {
+                    if (this != other) {
+                        this = other;
+                    }
+                    return this;
                 }
 
         };
@@ -331,257 +307,162 @@ namespace Data_Structures {
     template <typename key_, typename data_> class dict_iterator;
 
 
+
     template <typename data_> class linked_list {
 
         private:
             single_linear_node<data_>* head, *tail;
             unsigned long size;
-
             bool throw_and_destruct;
-            bool (*compare_equal) (const data_& first, const data_& second);
+            bool (*compare_func) (data_ first, data_ second);
 
-            friend class list_iterator<data_>;
+
+            bool default_compare(data_ first, data_ second) {
+                return first == second;
+            }
 
         public:
 
             linked_list() {
-                this->head = tail = nullptr;
+                this->head = this->tail = nullptr;
                 this->size = 0;
-                this->compare_equal = nullptr;
-                throw_and_destruct = true;
+                this->throw_and_destruct = true;
             }
 
-            linked_list(const data_ data, bool (*equal) (const data_&, const data_&) = nullptr, bool throw_and_free = true) {
-                this->head = new single_linear_node<data_>(data);
+            linked_list(data_ new_data, bool throw_and_free = true, bool (*comp) (data_ first, data_ second) = nullptr) {
+                this->head = new single_linear_node<data_>(new_data);
                 this->tail = this->head;
                 this->size = 1;
-                this->compare_equal = equal;
-                throw_and_destruct = throw_and_free;
-            }
-
-            linked_list(const linked_list<data_>& other_list) {
-                if (other_list.size > 0 && &other_list != this) {
-                    single_linear_node<data_>* this_node, *other_node = other_list.head;
-                    this->head = new single_linear_node<data_>(other_node);
-                    this->size = 1;
-                    this_node = this->head;
-                    while (other_node->get_next() != nullptr) {
-                        this_node->update_next(new single_linear_node<data_>(other_node->get_data()));
-                        other_node = other_node->get_next();
-                        this->size = this->size + 1;
-                    }
-                    this->tail = this_node;
-                    this->compare_equal = other_list.compare_equal;
-                    this->throw_and_destruct = other_list.throw_and_destruct;
-                }
+                this->throw_and_destruct = throw_and_free;
+                this->compare_func = comp;
             }
 
             ~linked_list() {
-                single_linear_node<data_>* this_node = this->head;
-                while (this_node) {
-                    this->head = this_node->get_next();
-                    delete this_node;
-                    this_node = this->head;
+                this->tail = this->head;
+                while (this->tail != nullptr) {
+                    this->head = this->tail->get_next();
+                    delete this->head;
+                    this->tail = this->head;
                     this->size = this->size - 1;
                 }
                 this->throw_and_destruct = true;
-                this->compare_equal = nullptr;
-            }
-
-            void destruct_and_throw(const bool free_and_throw) {
-                this->throw_and_destruct = free_and_throw;
-            }
-
-            bool destruct_and_throw() const {
-                return this->throw_and_destruct;
+                this->compare_func = nullptr;
             }
 
             bool empty() const {
                 return this->size == 0;
             }
 
+            bool throws_and_distructs() {
+                return this->throw_and_destruct;
+            }
+
+            void throws_and_distructs(bool will_throw) {
+                this->throw_and_destruct = will_throw;
+            }
+
+            operator bool() const {
+                return this->size != 0;
+            }
+
             unsigned long length() const {
                 return this->size;
             }
 
-            operator bool() const {
-                return this->size > 0;
+            void update_compare_function(bool (*comp) (data_ first, data_ second) = nullptr) {
+                this->compare_func = comp;
             }
 
-            data_& operator[](signed long index_) {
-                if ((index_ > 0 && (this->size < ((unsigned long) index_))) || (index_ < 0 && (this->size < ((unsigned long) (index_ * -1))))) {
+            bool push(data_ new_data, signed long index = -1) {
+                unsigned long push_index = (index < 0) ? this->size + 1 - ((unsigned long) (index * -1)) : (unsigned long) index;
+                if (push_index > this->size) {
                     if (this->throw_and_destruct) {
                         this->~linked_list();
                     }
-                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Ya... you just passed in an index that is larger than the linked list");
+                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Push index passed in is not reachable given the current size of the linked list.");
                 }
-                unsigned long peek_index = (index_ < 0) ? this->size - ((unsigned long) (index_ * -1)) : (unsigned long) index_;
-                // single_linear_node<data_>* remove_me;
-                data_ the_answer;
-                if (peek_index == 0) {
-                    the_answer = this->head->get_data();
-                }
-                else {
-                    the_answer = this->tail->get_data();
-                    unsigned long this_index;
-                    single_linear_node<data_>* this_node;
-                    for (this_index = 0, this_node = this->head; this_index < peek_index - 1 && this_node != nullptr; this_index++, this_node++);
-
-                    if (this_index == peek_index - 1) {
-                        the_answer = this_node->get_next()->get_data();
-                    }
-                    else {
-                        if (this->throw_and_destruct) {
-                            this->~linked_list();
-                        }
-                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Did not get to the proper location while trying to pop data");
-                    }
-                }
-                this->size = this->size - 1;
-                return the_answer;
-            }
-
-            bool push(const data_ new_data, signed long index_ = -1) {
-                if ((index_ > 0 && (this->size < ((unsigned long) index_))) || (index_ < 0 && (this->size + 1 < ((unsigned long) (index_ * -1))))) {
-                    if (this->throw_and_destruct) {
-                        this->~linked_list();
-                    }
-                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Ya... you just passed in an index that is too large for this list to understand");
-                }
-                unsigned long push_index = (index_ < 0) ? this->size + 1 - ((unsigned long) (index_ * -1)) : (unsigned long) index_;
-                unsigned long old_len = this->size;
                 single_linear_node<data_>* new_node = new single_linear_node<data_>(new_data);
-                if (this->size == 0) {
-                    this->head = new_node;
-                    this->tail = this->head;
-                }
-                else {
-                    if (push_index == 0) {
-                        new_node->update_next(this->head);
-                        this->size = this->size + 1;
+                if (!new_node) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
                     }
-                    else if (push_index == this->size) {
+                    throw Data_Structure_Exceptions::MemoryError((char *) "Could not get the memory necessary to push data to the linked list\n");
+                }
+
+                unsigned long old_len = this->size;
+                if (this->size == push_index) {
+                    if (this->size == 0) {
+                        this->head = new_node;
+                        this->tail = this->head;
+                        // this->size = ((this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size));
+                        // if (this->compare_func == nullptr) {
+                        //     this->size = (this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
+                        // }
+                        // else {
+                        //     this->size = (this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
+                        // }
+                    }
+                    else {
                         this->tail->update_next(new_node);
+                        // if (this->compare_func == nullptr) {
+                        //     this->size = (this->default_compare(this->tail->get_next()->get_data(), new_data)) ? this->size + 1 : this->size;
+                        // }
+                        // else {
+                        //     this->size = (this->compare_func(this->tail->get_next()->get_data(), new_data)) ? this->size + 1 : this->size;
+                        // }
+                        // this->size = ((this->tail->get_next() == new_node ) && (new_node->get_data() == new_data)) ? this->size + 1 : this->size;
                         this->tail = this->tail->get_next();
-                        this->size = this->size + 1;
+                    }
+                    this->size = ((this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size));
+                }
+
+                else if (push_index == 0) {
+                    if (this->size == 0) {
+                        this->head = new_node;
+                        this->tail = this->head;
+                        
                     }
                     else {
-                        unsigned long this_index;
-                        single_linear_node<data_>* this_node;
-                        
-                        // need the this_index < push_index - 1 to ensure that
-                        // when loop terminates, this_node is at the node before peek_index.
-                        for (this_index = 0, this_node = this->head; this_index < push_index - 1 && this_node != nullptr; this_index++, this_node++);
-                        
-                        if (this_index == push_index - 1) {
-                            // at proper location
-                            new_node->update_next(this_node->get_next());
-                            this_node->update_next(new_node);
-                            this->size = this->size + 1;
-                        }
-                        else {
-                            if (throw_and_destruct) {
-                                this->~linked_list();
-                            }
-                            throw Data_Structure_Exceptions::IllegalIndex((char *) "Something went wrong with trying to find the right location in the linked list for the data.");
-                        }
+                        new_node->update_next(this->head);
+                        this->head = new_node;
+                        // this->size = this->size + 1;
                     }
-                }
-                return this->size == (old_len + 1);
-            }
+                    this->size = (this->compare_func == nullptr) ? ((this->default_compare(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size) : ((this->compare_func(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size);
+                    // if (this->compare_func == nullptr) {
+                    //     this->size = (this->default_compare(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size;
+                    // }
+                    // else {
+                    //     this->size = (this->compare_func(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size;
+                    // }
 
-            data_ pop(signed long index_ = 0) {
-                if ((index_ > 0 && (this->size < ((unsigned long) index_))) || (index_ < 0 && (this->size < ((unsigned long) (index_ * -1))))) {
-                    if (this->throw_and_destruct) {
-                        this->~linked_list();
-                    }
-                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Ya... you just passed in an index that is larger than the linked list");
                 }
-                unsigned long peek_index = (index_ < 0) ? this->size - ((unsigned long) (index_ * -1)) : (unsigned long) index_;
-                single_linear_node<data_>* remove_me;
-                data_ the_answer;
-                if (peek_index == 0) {
-                    the_answer = this->head->get_data();
-                    remove_me = this->head;
-                    this->head = this->head->get_next();
-                    // delete remove_me;
-                }
+
                 else {
-                    the_answer = this->tail->get_data();
                     unsigned long this_index;
                     single_linear_node<data_>* this_node;
-                    for (this_index = 0, this_node = this->head; this_index < peek_index - 1 && this_node != nullptr; this_index++, this_node++);
+                    for (this_node = this->head, this_index = 0; this_index < push_index - 1 && this_node != nullptr; this_node = this_node->get_next(), this_index = this_index + 1);
 
-                    if (this_index == peek_index - 1) {
-                        // at proper location
-                        the_answer = this_node->get_next()->get_data();
-                        if (this_index + 1 == this->size - 1) {
-                            // delete this_node->get_next();
-                            remove_me = this_node->get_next();
-                        }
-                        else {
-                            remove_me = this_node->get_next();
-                            this_node->update_next(this_node->get_next()->get_next());
-                            // delete remove_me;
-                        }
-                    }
-                    else {
+                    if (this_index + 1 != push_index) {
                         if (this->throw_and_destruct) {
                             this->~linked_list();
                         }
-                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Did not get to the proper location while trying to pop data");
+                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Shifted to the wrong index.");
                     }
+                    new_node->update_next(this_node->get_next());
+                    this_node->update_next(new_node);
+                    this->size = ((this_node->get_next() == new_node) && (this_node->get_next()->get_next() == new_node->get_next())) ? this->size + 1 : this->size;
+                    // this->size = this->size + 1;
                 }
-                delete remove_me;
-                this->size = this->size - 1;
-                return the_answer;
+                
+                return (old_len + 1) == this->size;
             }
 
-            data_ peek(signed long index_ = 0) {
-                if ((index_ > 0 && (this->size < ((unsigned long) index_))) || (index_ < 0 && (this->size < ((unsigned long) (index_ * -1))))) {
-                    if (this->throw_and_destruct) {
-                        this->~linked_list();
-                    }
-                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Ya... you just passed in an index that is larger than the linked list");
-                }
-                unsigned long peek_index = (index_ < 0) ? this->size - ((unsigned long) (index_ * -1)) : (unsigned long) index_;
-                // single_linear_node<data_>* remove_me;
-                data_ the_answer;
-                if (peek_index == 0) {
-                    the_answer = this->head->get_data();
-                }
-                else {
-                    the_answer = this->tail->get_data();
-                    unsigned long this_index;
-                    single_linear_node<data_>* this_node;
-                    for (this_index = 0, this_node = this->head; this_index < peek_index - 1 && this_node != nullptr; this_index++, this_node++);
+            
 
-                    if (this_index == peek_index - 1) {
-                        the_answer = this_node->get_next()->get_data();
-                    }
-                    else {
-                        if (this->throw_and_destruct) {
-                            this->~linked_list();
-                        }
-                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Did not get to the proper location while trying to pop data");
-                    }
-                }
-                this->size = this->size - 1;
-                return the_answer;
-            }
-
-            void reset() {
-                single_linear_node<data_>* this_node = this->head;
-                while (this_node != nullptr) {
-                    this->head = this_node->get_next();
-                    delete this_node;
-                    this_node = this->head;
-                    this->size = this->size - 1;
-                }
-                this->throw_and_distruct = true;
-                this->compare_equal = nullptr;
-            }
 
     };
+
+
+
 
 }

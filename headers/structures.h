@@ -4,6 +4,9 @@
 
 
 
+#if not defined(_LIBCPP_IOSTREAM)
+    #include <iostream>
+#endif
 
 
 
@@ -327,6 +330,7 @@ namespace Data_Structures {
                 this->head = this->tail = nullptr;
                 this->size = 0;
                 this->throw_and_destruct = true;
+                this->compare_func = nullptr;
             }
 
             linked_list(data_ new_data, bool throw_and_free = true, bool (*comp) (data_ first, data_ second) = nullptr) {
@@ -341,10 +345,10 @@ namespace Data_Structures {
                 this->tail = this->head;
                 while (this->tail != nullptr) {
                     this->head = this->tail->get_next();
-                    delete this->head;
+                    delete this->tail;
                     this->tail = this->head;
-                    this->size = this->size - 1;
                 }
+                this->size = 0;
                 this->throw_and_destruct = true;
                 this->compare_func = nullptr;
             }
@@ -353,7 +357,7 @@ namespace Data_Structures {
                 return this->size == 0;
             }
 
-            bool throws_and_distructs() {
+            bool throws_and_distructs() const {
                 return this->throw_and_destruct;
             }
 
@@ -388,32 +392,24 @@ namespace Data_Structures {
                     }
                     throw Data_Structure_Exceptions::MemoryError((char *) "Could not get the memory necessary to push data to the linked list\n");
                 }
-
+                new_node->set_data(new_data);
                 unsigned long old_len = this->size;
                 if (this->size == push_index) {
                     if (this->size == 0) {
                         this->head = new_node;
                         this->tail = this->head;
-                        // this->size = ((this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size));
-                        // if (this->compare_func == nullptr) {
-                        //     this->size = (this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
-                        // }
-                        // else {
-                        //     this->size = (this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
-                        // }
                     }
                     else {
                         this->tail->update_next(new_node);
-                        // if (this->compare_func == nullptr) {
-                        //     this->size = (this->default_compare(this->tail->get_next()->get_data(), new_data)) ? this->size + 1 : this->size;
-                        // }
-                        // else {
-                        //     this->size = (this->compare_func(this->tail->get_next()->get_data(), new_data)) ? this->size + 1 : this->size;
-                        // }
-                        // this->size = ((this->tail->get_next() == new_node ) && (new_node->get_data() == new_data)) ? this->size + 1 : this->size;
                         this->tail = this->tail->get_next();
                     }
-                    this->size = ((this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this-compare_func(this->tail->get_data(), new_data)) ? this->size + 1 : this->size));
+                    if (this->compare_func == nullptr) {
+                        this->size = (this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
+                    }
+                    else {
+                        this->size = ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size);
+                    }
+                    // this->size = (this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size);
                 }
 
                 else if (push_index == 0) {
@@ -428,13 +424,7 @@ namespace Data_Structures {
                         // this->size = this->size + 1;
                     }
                     this->size = (this->compare_func == nullptr) ? ((this->default_compare(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size) : ((this->compare_func(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size);
-                    // if (this->compare_func == nullptr) {
-                    //     this->size = (this->default_compare(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size;
-                    // }
-                    // else {
-                    //     this->size = (this->compare_func(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size;
-                    // }
-
+                    
                 }
 
                 else {
@@ -451,7 +441,7 @@ namespace Data_Structures {
                     new_node->update_next(this_node->get_next());
                     this_node->update_next(new_node);
                     this->size = ((this_node->get_next() == new_node) && (this_node->get_next()->get_next() == new_node->get_next())) ? this->size + 1 : this->size;
-                    // this->size = this->size + 1;
+                    
                 }
                 
                 return (old_len + 1) == this->size;

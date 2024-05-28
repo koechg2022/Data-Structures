@@ -1,5 +1,5 @@
 
-#include <utility>
+
 #if not defined(_LIBCPP_IOSTREAM)
     #include <iostream>
 #endif
@@ -208,10 +208,10 @@ void linked_list_tests() {
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
     update_tests(string_list.throws_and_distructs());
-    print_results((char *) "\tCorrectly initialized a Linked list : ", passed, total);
+    print_results((char *) "\t\tCorrectly initialized a Linked list : ", passed, total);
 
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
         update_tests(string_list.push(imagine_dragons_lyrics[index_]));
     }
-    print_results((char*) ("\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the linked list").c_str(), passed, total);
+    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the linked list : ").c_str(), passed, total);
 }

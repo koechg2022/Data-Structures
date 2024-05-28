@@ -62,7 +62,8 @@ void linked_list_tests();
 
 int main() {
     init();
-    // print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
+    linked_list_tests();
+    print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
 }
 
 

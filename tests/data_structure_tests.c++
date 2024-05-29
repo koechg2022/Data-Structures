@@ -8,9 +8,12 @@
     #include <vector>
 #endif
 
-#if not defined(_LIBCPP_MAP)
-    #include <map>
+
+// For unix the marker is _STRINGFWD_H
+#if defined (crap_os) && not defined(_STRING_)
+    #include <string>
 #endif
+
 
 #include "../headers/structures.h"
 
@@ -23,24 +26,6 @@
 
 unsigned long passed, total, total_pass, total_total, absolute_pass, absolute_total;
 
-
-
-
-// void print_with_nums(const char* the_string, unsigned long pass, unsigned long tot, bool nl = true) {
-//     #if defined(unix_os)
-//         std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
-//     #else
-//         std::printf("%s%lu/%lu\n", the_string, pass, tot);
-//     #endif
-// }
-
-// void print_just_words(const char* the_string, bool nl = true, unsigned short color = GREEN) {
-//     #if defined(unix_os) 
-//         std::printf("\x1B[1;%u49m%s\x1B[0m%c", color, the_string, (nl) ? '\n' : 0);
-//     #else
-//         std::printf("%s%c", the_string, (nl) ? '\n' : 0);
-//     #endif
-// }
 
 
 unsigned long index_, extra, other_extra;
@@ -185,7 +170,7 @@ void print_results(char* the_string, unsigned long pass, unsigned long tot, bool
     #if defined(unix_os)
         std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
     #else
-        std::printf("%s%lu/%lu\n", the_string, pass, tot);
+        std::printf("%s%lu/%lu%c", the_string, pass, tot, bool nl);
     #endif
 }
 

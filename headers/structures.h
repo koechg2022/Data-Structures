@@ -347,6 +347,21 @@ namespace Data_Structures {
                     this->head = this->tail->get_next();
                     delete this->tail;
                     this->tail = this->head;
+                    // this->size = this->size - 1;
+                }
+                this->size = 0;
+                this->throw_and_destruct = true;
+                this->compare_func = nullptr;
+            }
+
+            void reset() {
+                // this->~linked_list();
+                this->tail = this->head;
+                while (this->tail != nullptr) {
+                    this->head = this->tail->get_next();
+                    delete this->tail;
+                    this->tail = this->head;
+                    // this->size = this->size - 1;
                 }
                 this->size = 0;
                 this->throw_and_destruct = true;
@@ -446,6 +461,97 @@ namespace Data_Structures {
                 
                 return (old_len + 1) == this->size;
             }
+
+            bool push_positive(data_ new_data, unsigned long index) {
+                unsigned long push_index = index;
+                if (push_index > this->size) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Push index passed in is not reachable given the current size of the linked list.");
+                }
+                single_linear_node<data_>* new_node = new single_linear_node<data_>(new_data);
+                if (!new_node) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::MemoryError((char *) "Could not get the memory necessary to push data to the linked list\n");
+                }
+                new_node->set_data(new_data);
+                unsigned long old_len = this->size;
+                if (this->size == push_index) {
+                    if (this->size == 0) {
+                        this->head = new_node;
+                        this->tail = this->head;
+                    }
+                    else {
+                        this->tail->update_next(new_node);
+                        this->tail = this->tail->get_next();
+                    }
+                    if (this->compare_func == nullptr) {
+                        this->size = (this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size;
+                    }
+                    else {
+                        this->size = ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size);
+                    }
+                    // this->size = (this->compare_func == nullptr) ? ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size) : ((this->default_compare(this->tail->get_data(), new_data)) ? this->size + 1 : this->size);
+                }
+
+                else if (push_index == 0) {
+                    if (this->size == 0) {
+                        this->head = new_node;
+                        this->tail = this->head;
+                        
+                    }
+                    else {
+                        new_node->update_next(this->head);
+                        this->head = new_node;
+                        // this->size = this->size + 1;
+                    }
+                    this->size = (this->compare_func == nullptr) ? ((this->default_compare(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size) : ((this->compare_func(this->head->get_data(), new_data) && this->head->get_next() != nullptr) ? this->size + 1 : this->size);
+                    
+                }
+
+                else {
+                    unsigned long this_index;
+                    single_linear_node<data_>* this_node;
+                    for (this_node = this->head, this_index = 0; this_index < push_index - 1 && this_node != nullptr; this_node = this_node->get_next(), this_index = this_index + 1);
+
+                    if (this_index + 1 != push_index) {
+                        if (this->throw_and_destruct) {
+                            this->~linked_list();
+                        }
+                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Shifted to the wrong index.");
+                    }
+                    new_node->update_next(this_node->get_next());
+                    this_node->update_next(new_node);
+                    this->size = ((this_node->get_next() == new_node) && (this_node->get_next()->get_next() == new_node->get_next())) ? this->size + 1 : this->size;
+                    
+                }
+                
+                return (old_len + 1) == this->size;
+            }
+
+            data_& operator[](signed long index) {
+                if (this->size == 0) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::Empty_Data_Structure((char *) "Illegal indexing. Linked list is empty");
+                }
+                unsigned long this_index, peek_index = (index < 0) ? ((this->size) - ((unsigned long) (index * -1))) : ((unsigned long) index);
+                if (peek_index >= this->size) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Illegal index. Cannot peek an index greater than the size of the linked list");
+                }
+                single_linear_node<data_>* the_answer;
+                for (the_answer = this->head, this_index = 0; (this_index < this->size) && (the_answer != nullptr) && (this_index < peek_index); the_answer = the_answer->get_next(), this_index = this_index + 1);
+                
+                return the_answer->peek_data();
+            }
+
 
             
 

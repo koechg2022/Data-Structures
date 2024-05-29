@@ -43,7 +43,7 @@ unsigned long passed, total, total_pass, total_total, absolute_pass, absolute_to
 // }
 
 
-unsigned long index_, extra;
+unsigned long index_, extra, other_extra;
 
 std::vector<std::string> imagine_dragons_lyrics, imagine_dragons_lyrics_caps;
 std::vector<unsigned long> line_lengths;
@@ -77,6 +77,7 @@ void init() {
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river (Woah, now)");
     imagine_dragons_lyrics.push_back("(Woah, now)");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Verse 1]");
     imagine_dragons_lyrics.push_back("I wanna live a life like that");
     imagine_dragons_lyrics.push_back("Live the life of the faithful one");
@@ -86,6 +87,7 @@ void init() {
     imagine_dragons_lyrics.push_back("I don't want no enemies");
     imagine_dragons_lyrics.push_back("Oh, it's the curse of the man");
     imagine_dragons_lyrics.push_back("Always living life, living life, living just to please");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Chorus]");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
     imagine_dragons_lyrics.push_back("And the wrath of the giver");
@@ -98,12 +100,13 @@ void init() {
     imagine_dragons_lyrics.push_back("See Imagine Dragons Live");
     imagine_dragons_lyrics.push_back("Get tickets as low as $49");
     imagine_dragons_lyrics.push_back("You might also like");
-    imagine_dragons_lyrics.push_back("Automatic");
-    imagine_dragons_lyrics.push_back("C.Gambino");
-    imagine_dragons_lyrics.push_back("Mussukka");
-    imagine_dragons_lyrics.push_back("Vesa heimo");
-    imagine_dragons_lyrics.push_back("Käpy");
-    imagine_dragons_lyrics.push_back("​koira");
+    // imagine_dragons_lyrics.push_back("Automatic");
+    // imagine_dragons_lyrics.push_back("C.Gambino");
+    // imagine_dragons_lyrics.push_back("Mussukka");
+    // imagine_dragons_lyrics.push_back("Vesa heimo");
+    // imagine_dragons_lyrics.push_back("Käpy");
+    // imagine_dragons_lyrics.push_back("​koira");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Verse 2]");
     imagine_dragons_lyrics.push_back("Oh, I'm alkaline");
     imagine_dragons_lyrics.push_back("I'm always keeping to the basics");
@@ -114,6 +117,7 @@ void init() {
     imagine_dragons_lyrics.push_back("Oh, I'm self-assured");
     imagine_dragons_lyrics.push_back("I'm nervous");
     imagine_dragons_lyrics.push_back("And I'm pacing, oh, I'm pacing");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Chorus]");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
     imagine_dragons_lyrics.push_back("And the wrath of the giver");
@@ -123,6 +127,7 @@ void init() {
     imagine_dragons_lyrics.push_back("And the wrath of the giver (Woah, now)");
     imagine_dragons_lyrics.push_back("With the hands of a sinner (Woah, now)");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Post-Chorus]");
     imagine_dragons_lyrics.push_back("Mou-, mou-, mouth of the river");
     imagine_dragons_lyrics.push_back("Mou-, mou-, mou-, mouth of the river");
@@ -132,6 +137,7 @@ void init() {
     imagine_dragons_lyrics.push_back("Mou-, mou-, mou-, mouth of the river");
     imagine_dragons_lyrics.push_back("Mou-, mou-, mouth of the river, river, river");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Bridge]");
     imagine_dragons_lyrics.push_back("And I am going under");
     imagine_dragons_lyrics.push_back("Oh, I am going under");
@@ -139,6 +145,7 @@ void init() {
     imagine_dragons_lyrics.push_back("Oh, I am going under");
     imagine_dragons_lyrics.push_back("I am going under");
     imagine_dragons_lyrics.push_back("Oh, I");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Chorus]");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river (Woah, now)");
     imagine_dragons_lyrics.push_back("And the wrath of the giver");
@@ -148,6 +155,7 @@ void init() {
     imagine_dragons_lyrics.push_back("And the wrath of the giver (Woah, now)");
     imagine_dragons_lyrics.push_back("With the hands of a sinner (Woah, now)");
     imagine_dragons_lyrics.push_back("Oh, the mouth of the river");
+    imagine_dragons_lyrics.push_back("\n\n");
     imagine_dragons_lyrics.push_back("[Outro]");
     imagine_dragons_lyrics.push_back("Mou-, mou-, mouth of the river");
     imagine_dragons_lyrics.push_back("Mou-, mou-, mou-, mouth of the river");
@@ -208,10 +216,91 @@ void linked_list_tests() {
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
     update_tests(string_list.throws_and_distructs());
-    print_results((char *) "\t\tCorrectly initialized a Linked list : ", passed, total);
+    print_results((char *) "\t\tCorrectly initialized a Linked list\t:\t", passed, total);
 
+    passed = total = 0;
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
         update_tests(string_list.push(imagine_dragons_lyrics[index_]));
     }
-    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the linked list : ").c_str(), passed, total);
+    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    
+    passed = total = 0;
+    string_list.reset();
+    update_tests(string_list.empty());
+    update_tests(string_list.length() == 0);
+    update_tests(!string_list);
+    update_tests(string_list.throws_and_distructs());
+    print_results((char *) "\t\tCorrectly resets a Linked list\t:\t", passed, total);
+
+    passed = total = 0;
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        update_tests(string_list.push(imagine_dragons_lyrics[index_], 0));
+    }
+    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the beginning of the linked list\t:\t").c_str(), passed, total);
+
+    passed = total = 0;
+    string_list.reset();
+    update_tests(string_list.empty());
+    update_tests(string_list.length() == 0);
+    update_tests(!string_list);
+    update_tests(string_list.throws_and_distructs());
+    print_results((char *) "\t\tCorrectly resets a Linked list after previously being reset\t:\t", passed, total);
+
+    passed = total = 0;
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        string_list.push(imagine_dragons_lyrics[index_]);
+    }
+
+    extra = (imagine_dragons_lyrics_caps.size() / 2) - 10;
+    for (index_ = 0; index_ < 10; index_ = index_ + 1) {
+        string_list.push(imagine_dragons_lyrics_caps[extra + index_], extra + index_);
+    }
+
+    update_tests(!string_list.empty());
+    update_tests(string_list.length() == imagine_dragons_lyrics.size() + 10);
+    update_tests(string_list);
+    for (index_ = 0; index_ < 10; index_ = index_ + 1) {
+        update_tests(compare_ignore_case(imagine_dragons_lyrics[extra + index_], imagine_dragons_lyrics_caps[extra + index_]));
+        update_tests(compare_ignore_case(string_list[index_ + extra], imagine_dragons_lyrics[index_ + extra]));
+        update_tests(compare_with_case(string_list[index_ + extra], imagine_dragons_lyrics_caps[index_ + extra]));
+    }
+    print_results((char *) "\t\tCorrectly inserts into the center of a linked list\t:\t", passed, total);
+    
+    passed = total = 0;
+    unsigned long changed[10];
+    extra = other_extra = 0;
+    std::string changed_to = "This was manually changed";
+    for (index_ = 0; index_ < string_list.length(); index_ = index_ + 1) {
+        // std::printf("%lu.)\t%s\n", index_, string_list[index_].c_str());
+        if (useful_functions::same_string(string_list[index_].c_str(), (char *) "\n\n")) {
+            string_list[index_] = changed_to;
+            changed[extra] = index_;
+            extra = extra + 1;
+            other_extra = other_extra + 1;
+            // std::printf("Changing at index %lu\n", index_);
+        }
+    }
+    
+    for (index_ = 0; index_ < other_extra; index_ = index_ + 1) {
+        std::string this_string = string_list[changed[index_]];
+        update_tests(compare_ignore_case(string_list[changed[index_]], changed_to));
+        update_tests(compare_with_case(this_string, changed_to));
+    }
+    print_results((char *) "\t\tCorrectly changes data passed to a reference location with []\t:\t", passed, total);
+
+    passed = total = 0;
+    string_list.reset();
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        update_tests(string_list.push(imagine_dragons_lyrics[index_]));
+    }
+    // list is filled
+    // std::printf("string_list.length()\t:\t%lu\n", string_list.length());
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        // std::printf("At index %lu", index_);
+        update_tests(compare_with_case(imagine_dragons_lyrics[imagine_dragons_lyrics.size() - index_ - 1], string_list[ (((signed long) index_) + 1) * -1 ]));
+    }
+
+    print_results((char *) "\t\tCorrectly peeks negative indexes\t:\t", passed, total);
+
+
 }

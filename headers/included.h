@@ -49,19 +49,19 @@ namespace useful_functions {
         return (c >= '0' && c <= '9');
     }
 
-    char to_caps(const char c) {
+    inline char to_caps(const char c) {
         return (is_lower(c)) ? (c - ('a' - 'A')) : c;
     }
 
-    char to_lower(const char c) {
+    inline char to_lower(const char c) {
         return (is_caps(c)) ? (c + ('A' - 'a')) : c;
     }
 
-    bool same_char(const char a, const char b, bool ignore_case = true) {
+    inline bool same_char(const char a, const char b, bool ignore_case = true) {
         return (ignore_case) ? to_caps(a) == to_caps(b) : a == b;
     }
 
-    bool same_string(const char* a, const char* b, bool ignore_case = true) {
+    inline bool same_string(const char* a, const char* b, bool ignore_case = true) {
         if (a == b) {
             return true;
         }

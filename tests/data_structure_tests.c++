@@ -1,6 +1,6 @@
 
 
-#if not defined(_LIBCPP_IOSTREAM)
+#if not defined(_LIBCPP_IOSTREAM) && defined(unix_os)
     #include <iostream>
 #endif
 
@@ -9,10 +9,6 @@
 #endif
 
 
-// For unix the marker is _STRINGFWD_H
-#if defined (crap_os) && not defined(_STRING_)
-    #include <string>
-#endif
 
 
 #include "../headers/structures.h"
@@ -170,7 +166,7 @@ void print_results(char* the_string, unsigned long pass, unsigned long tot, bool
     #if defined(unix_os)
         std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
     #else
-        std::printf("%s%lu/%lu%c", the_string, pass, tot, bool nl);
+        std::printf("%s%lu/%lu%c", the_string, pass, tot, (nl) ? '\n' : 0);
     #endif
 }
 
@@ -199,6 +195,9 @@ void linked_list_tests() {
     passed = total = 0;
     Data_Structures::linked_list<std::string> string_list;
     std::string this_string;
+    #if defined(crap_os)
+        char buffer[100];
+    #endif
     update_tests(string_list.empty());
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
@@ -209,7 +208,12 @@ void linked_list_tests() {
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
         update_tests(string_list.push(imagine_dragons_lyrics[index_]));
     }
-    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    #if defined (crap_os)
+        std::sprintf(buffer, "%lld", imagine_dragons_lyrics.size());
+        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    #else
+        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    #endif
     
     passed = total = 0;
     string_list.reset();
@@ -223,8 +227,13 @@ void linked_list_tests() {
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
         update_tests(string_list.push(imagine_dragons_lyrics[index_], 0));
     }
-    print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the beginning of the linked list\t:\t").c_str(), passed, total);
 
+    #if defined (crap_os)
+        std::sprintf(buffer, "%lld", imagine_dragons_lyrics.size());
+        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    #else
+        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+    #endif
     passed = total = 0;
     string_list.reset();
     update_tests(string_list.empty());

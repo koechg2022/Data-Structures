@@ -202,7 +202,7 @@ void linked_list_tests() {
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
     update_tests(string_list.throws_and_distructs());
-    print_results((char *) "\t\tCorrectly initialized a Linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly initialized a std::string linked list\t:\t", passed, total);
 
     passed = total = 0;
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
@@ -210,9 +210,9 @@ void linked_list_tests() {
     }
     #if defined (crap_os)
         std::sprintf(buffer, "%lld", imagine_dragons_lyrics.size());
-        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the std::string linked list\t:\t").c_str(), passed, total);
     #else
-        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the std::string linked list\t:\t").c_str(), passed, total);
     #endif
     
     passed = total = 0;
@@ -221,7 +221,7 @@ void linked_list_tests() {
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
     update_tests(string_list.throws_and_distructs());
-    print_results((char *) "\t\tCorrectly resets a Linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly resets a std::string linked list\t:\t", passed, total);
 
     passed = total = 0;
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
@@ -230,9 +230,9 @@ void linked_list_tests() {
 
     #if defined (crap_os)
         std::sprintf(buffer, "%lld", imagine_dragons_lyrics.size());
-        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+        print_results((char*) ("\t\tSuccessfully added " + std::string(buffer) + " strings to the end of the std::string linked list\t:\t").c_str(), passed, total);
     #else
-        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the linked list\t:\t").c_str(), passed, total);
+        print_results((char*) ("\t\tSuccessfully added " + std::to_string(imagine_dragons_lyrics.size()) + " strings to the end of the std::string linked list\t:\t").c_str(), passed, total);
     #endif
     passed = total = 0;
     string_list.reset();
@@ -240,7 +240,7 @@ void linked_list_tests() {
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
     update_tests(string_list.throws_and_distructs());
-    print_results((char *) "\t\tCorrectly resets a Linked list after previously being reset\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly resets a std::string linked list after previously being reset\t:\t", passed, total);
 
     passed = total = 0;
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
@@ -260,7 +260,7 @@ void linked_list_tests() {
         update_tests(compare_ignore_case(string_list[index_ + extra], imagine_dragons_lyrics[index_ + extra]));
         update_tests(compare_with_case(string_list[index_ + extra], imagine_dragons_lyrics_caps[index_ + extra]));
     }
-    print_results((char *) "\t\tCorrectly inserts into the center of a linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly inserts into the center of a std::string linked list\t:\t", passed, total);
     
     passed = total = 0;
     unsigned long changed[10];
@@ -282,7 +282,7 @@ void linked_list_tests() {
         update_tests(compare_ignore_case(string_list[changed[index_]], changed_to));
         update_tests(compare_with_case(this_string, changed_to));
     }
-    print_results((char *) "\t\tCorrectly changes data passed to a reference location with []\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly changes data passed to a reference location with [] in a std::string linked list\t:\t", passed, total);
 
     passed = total = 0;
     string_list.reset();
@@ -295,7 +295,7 @@ void linked_list_tests() {
         update_tests(compare_with_case(imagine_dragons_lyrics[imagine_dragons_lyrics.size() - index_ - 1], string_list[ (((signed long) index_) + 1) * -1 ]));
     }
 
-    print_results((char *) "\t\tCorrectly peeks negative indexes\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly peeks negative indexes in a std::string linked list\t:\t", passed, total);
     index_ = 0;
     
     while (string_list) {
@@ -306,7 +306,7 @@ void linked_list_tests() {
         update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics[index_]));
         index_ = index_ + 1;
     }
-    print_results((char *) "\t\tCorrectly pops from the front of the linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly pops from the front of the std::string linked list\t:\t", passed, total);
     // std::printf("Reached\n");
     passed = total = 0;
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
@@ -320,7 +320,7 @@ void linked_list_tests() {
         update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
         index_ = index_ - 1;
     }
-    print_results((char *) "\t\tCorrectly pops from the rear of the linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly pops from the rear of the std::string linked list\t:\t", passed, total);
 
 
     // Need a test for popping from the center of the linked list now
@@ -335,7 +335,18 @@ void linked_list_tests() {
         update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_ + extra]));
         update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics_caps[index_ + extra]));
     }
+    print_results((char *) "\t\tCorrectly pops from the center of the std::string linked list\t:\t", passed, total);
 
-    print_results((char *) "\t\tCorrectly pops from the center of the linked list\t:\t", passed, total);
+
+    // Now for testing other data types in this linked list
+    Data_Structures::linked_list<unsigned long> unsigned_list;
+
+    passed = total = 0;
+    update_tests(unsigned_list.empty());
+    update_tests(unsigned_list.length() == 0);
+    update_tests(unsigned_list.throws_and_distructs());
+    
+    print_results((char *) "\t\tCorrectly initializes an unsigned long linked list\t:\t", passed, total);
+
 
 }

@@ -232,6 +232,18 @@ namespace Data_Structures {
                     return this;
                 }
 
+                single_linear_node<data_>* operator++() {
+                    // single_linear_node<data_>* this_node = this;
+                    this = this->next;
+                    return this;
+                }
+
+                single_linear_node<data_>* operator++(int) {
+                    single_linear_node<data_>* this_node = this;
+                    ++(this);
+                    return this_node;
+                }
+
         };
 
     }
@@ -339,6 +351,25 @@ namespace Data_Structures {
                 this->size = 1;
                 this->throw_and_destruct = throw_and_free;
                 this->compare_func = comp;
+            }
+
+            linked_list(linked_list<data_>& list) {
+                if ((this != &list) && (list.size > 0)) {
+                    single_linear_node<data_> *list_node;
+                    this->head = new single_linear_node<data_>(list.head->get_data());
+                    this->tail = this->head;
+                    for (list_node = list.head->get_next(); list_node != nullptr; list_node++) {
+                        this->tail->update_next(new single_linear_node<data_>(list_node->get_data()));
+                        this->tail = this->tail->get_next();
+                        this->size = this->size + 1;
+                    }
+                }
+                else if ((this != &list) && (list.size() == 0)) {
+                    this->head = this->tail = nullptr;
+                    this->throw_and_destruct = true;
+                    this->size = 0;
+                    this->compare_func = nullptr;
+                }
             }
 
             ~linked_list() {

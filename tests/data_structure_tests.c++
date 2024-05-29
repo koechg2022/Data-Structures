@@ -212,6 +212,7 @@ void linked_list_tests() {
     std::printf("linked list tests:\n");
     passed = total = 0;
     Data_Structures::linked_list<std::string> string_list;
+    std::string this_string;
     update_tests(string_list.empty());
     update_tests(string_list.length() == 0);
     update_tests(!string_list);
@@ -282,7 +283,7 @@ void linked_list_tests() {
     }
     
     for (index_ = 0; index_ < other_extra; index_ = index_ + 1) {
-        std::string this_string = string_list[changed[index_]];
+        this_string = string_list[changed[index_]];
         update_tests(compare_ignore_case(string_list[changed[index_]], changed_to));
         update_tests(compare_with_case(this_string, changed_to));
     }
@@ -296,11 +297,36 @@ void linked_list_tests() {
     // list is filled
     // std::printf("string_list.length()\t:\t%lu\n", string_list.length());
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
-        // std::printf("At index %lu", index_);
         update_tests(compare_with_case(imagine_dragons_lyrics[imagine_dragons_lyrics.size() - index_ - 1], string_list[ (((signed long) index_) + 1) * -1 ]));
     }
 
     print_results((char *) "\t\tCorrectly peeks negative indexes\t:\t", passed, total);
+    index_ = 0;
+    
+    while (string_list) {
+        this_string = string_list.pop();
+        update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
+        update_tests(!compare_with_case(this_string, imagine_dragons_lyrics_caps[index_]));
+        update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics_caps[index_]));
+        update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics[index_]));
+        index_ = index_ + 1;
+        std::printf("At index %lu\n", index_);
+    }
+    print_results((char *) "\t\tCorrectly pops from the front of the linked list\t:\t", passed, total);
 
+    // passed = total = 0;
+    // for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+    //     string_list.push(imagine_dragons_lyrics[index_]);
+    // }
+
+    // index_ = imagine_dragons_lyrics.size() - 1;
+    // while (string_list && index_ >= 0) {
+    //     std::printf("popping the data at original index %lu\n", index_);
+    //     this_string = string_list.pop(-1);
+    //     update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
+    //     index_ = index_ - 1;
+    // }
+    // std::printf("Reached\n");
+    // print_results((char *) "\t\tCorrectly pops from the rear of the linked list\t:\t", passed, total);
 
 }

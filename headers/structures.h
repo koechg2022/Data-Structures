@@ -324,6 +324,21 @@ namespace Data_Structures {
                 return first == second;
             }
 
+            void private_reset() {
+                single_linear_node<data_> *this_head, *this_tail;
+                this_head = this->head;
+                this_tail = this_head;
+                while (this_tail != nullptr) {
+                    std::printf("In private_reset loop with a size of %lu\n", this->size);
+                    this_head = this_tail->get_next();
+                    delete this_tail;
+                    this_tail = this_head;
+                    this->size = this->size - 1;
+                }
+                // this->size = 0;
+                std::printf("Final size is %lu\n", this->size);
+            }
+
         public:
 
             linked_list() {
@@ -358,10 +373,10 @@ namespace Data_Structures {
                 // this->~linked_list();
                 this->tail = this->head;
                 while (this->tail != nullptr) {
+                    // std::printf("In loop with a size of %lu\n", this->size);
                     this->head = this->tail->get_next();
                     delete this->tail;
                     this->tail = this->head;
-                    // this->size = this->size - 1;
                 }
                 this->size = 0;
                 this->throw_and_destruct = true;
@@ -552,8 +567,62 @@ namespace Data_Structures {
                 return the_answer->peek_data();
             }
 
+            data_ pop(signed long index = 0) {
+                if (this->size == 0) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::Empty_Data_Structure((char *) "Illegal indexing. Linked list is empty");
+                }
+                unsigned long this_index, pop_index = (index < 0) ? ((this->size) - ((unsigned long) (index * -1))) : ((unsigned long) index);
+                if (pop_index >= this->size) {
+                    if (this->throw_and_destruct) {
+                        this->~linked_list();
+                    }
+                    throw Data_Structure_Exceptions::IllegalIndex((char *) "Illegal index. Cannot peek an index greater than the size of the linked list");
+                }
+                
+                single_linear_node<data_>* this_node = this->head;
+                data_ the_answer;
 
-            
+                if (pop_index == 0) {
+                    the_answer = this_node->get_data();
+                    if (this->size > 1) {
+                        this->head = this->head->get_next();
+                    }
+                    delete this->head;
+                    this->size = this->size - 1;
+                    return the_answer;
+                }
+                else {
+                    std::printf("Inside other branch with pop_index of %lu, and parameter index of %li\n", pop_index, index);
+                    for (this_index = 0; (this_index < (pop_index - 1)) && (this_node != this->tail) && (this_node != nullptr); this_index = this_index + 1, this_node = this_node->get_next());
+
+                    if (this_index >= this->size - 1) {
+                        if (this->throw_and_destruct) {
+                            this->~linked_list();
+                        }
+                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Shifted too far, at the wrong index");
+                    }
+
+                    if (this_index == this->size - 2) {
+                        std::printf("Popping data from the end of the linked list\n");
+                        the_answer = this_node->get_next()->get_data();
+                        delete this->tail;
+                        this->tail = this_node;
+                    }
+                    else {
+                        std::printf("Popping data from somewhere in the middle\n");
+                        the_answer = this_node->get_next()->get_data();
+                        single_linear_node<data_>* temp = this_node->get_next();
+                        this_node->update_next(this_node->get_next()->get_next());
+                        delete temp;
+                    }
+                    this->size = this->size - 1;
+                }
+
+                return the_answer;
+            }
 
 
     };

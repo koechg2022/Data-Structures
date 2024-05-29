@@ -1,2 +1,2 @@
-objects/test_data_structures
-objects/test_data_structures.exe
+objects/*
+!objects/

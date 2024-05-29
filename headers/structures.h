@@ -324,21 +324,6 @@ namespace Data_Structures {
                 return first == second;
             }
 
-            void private_reset() {
-                single_linear_node<data_> *this_head, *this_tail;
-                this_head = this->head;
-                this_tail = this_head;
-                while (this_tail != nullptr) {
-                    std::printf("In private_reset loop with a size of %lu\n", this->size);
-                    this_head = this_tail->get_next();
-                    delete this_tail;
-                    this_tail = this_head;
-                    this->size = this->size - 1;
-                }
-                // this->size = 0;
-                std::printf("Final size is %lu\n", this->size);
-            }
-
         public:
 
             linked_list() {
@@ -358,7 +343,7 @@ namespace Data_Structures {
 
             ~linked_list() {
                 this->tail = this->head;
-                while (this->tail != nullptr) {
+                while (this->tail != nullptr && this->size > 0) {
                     this->head = this->tail->get_next();
                     delete this->tail;
                     this->tail = this->head;
@@ -372,7 +357,7 @@ namespace Data_Structures {
             void reset() {
                 // this->~linked_list();
                 this->tail = this->head;
-                while (this->tail != nullptr) {
+                while (this->tail != nullptr && this->size > 0) {
                     // std::printf("In loop with a size of %lu\n", this->size);
                     this->head = this->tail->get_next();
                     delete this->tail;
@@ -396,7 +381,7 @@ namespace Data_Structures {
             }
 
             operator bool() const {
-                return this->size != 0;
+                return this->size > 0;
             }
 
             unsigned long length() const {
@@ -583,44 +568,43 @@ namespace Data_Structures {
                 }
                 
                 single_linear_node<data_>* this_node = this->head;
-                data_ the_answer;
 
                 if (pop_index == 0) {
-                    the_answer = this_node->get_data();
+                    // removing from the front
+                    // have to reset the head pointer
                     if (this->size > 1) {
                         this->head = this->head->get_next();
+                        // std::printf("shifting head\n");
                     }
-                    delete this->head;
-                    this->size = this->size - 1;
-                    return the_answer;
+                    else {
+                        // std::printf("Not shifting head\n");
+                    }
                 }
                 else {
-                    std::printf("Inside other branch with pop_index of %lu, and parameter index of %li\n", pop_index, index);
-                    for (this_index = 0; (this_index < (pop_index - 1)) && (this_node != this->tail) && (this_node != nullptr); this_index = this_index + 1, this_node = this_node->get_next());
+                    single_linear_node<data_>* before = this_node;
+                    for (this_index = 0; (before != nullptr) && (before != this->tail) && (this_index < pop_index - 1); this_index = this_index + 1, before = before->get_next());
 
-                    if (this_index >= this->size - 1) {
+                    if ((before == nullptr) || (before == this->tail) || (this_index >= pop_index)) {
                         if (this->throw_and_destruct) {
                             this->~linked_list();
                         }
-                        throw Data_Structure_Exceptions::IllegalIndex((char *) "Shifted too far, at the wrong index");
+                        throw Data_Structure_Exceptions::MemoryError((char *) "Shifted too far and lost the proper memory location");
                     }
 
-                    if (this_index == this->size - 2) {
-                        std::printf("Popping data from the end of the linked list\n");
-                        the_answer = this_node->get_next()->get_data();
-                        delete this->tail;
-                        this->tail = this_node;
+                    // to get here, remove is at the node right before the node to be removed
+                    this_node = before->get_next();
+                    if (this_node == this->tail) {
+                        this->tail = before;
                     }
                     else {
-                        std::printf("Popping data from somewhere in the middle\n");
-                        the_answer = this_node->get_next()->get_data();
-                        single_linear_node<data_>* temp = this_node->get_next();
-                        this_node->update_next(this_node->get_next()->get_next());
-                        delete temp;
+                        before->update_next(this_node->get_next());
                     }
-                    this->size = this->size - 1;
+
                 }
 
+                data_ the_answer = this_node->get_data();
+                delete this_node;
+                this->size = this->size - 1;
                 return the_answer;
             }
 

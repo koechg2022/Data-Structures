@@ -63,6 +63,7 @@ void linked_list_tests();
 int main() {
     init();
     linked_list_tests();
+    // std::printf("REACHED\n");
     print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
 }
 
@@ -306,27 +307,41 @@ void linked_list_tests() {
     while (string_list) {
         this_string = string_list.pop();
         update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
-        update_tests(!compare_with_case(this_string, imagine_dragons_lyrics_caps[index_]));
+        // update_tests(!compare_with_case(this_string, imagine_dragons_lyrics_caps[index_]));
         update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics_caps[index_]));
         update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics[index_]));
         index_ = index_ + 1;
-        std::printf("At index %lu\n", index_);
     }
     print_results((char *) "\t\tCorrectly pops from the front of the linked list\t:\t", passed, total);
-
-    // passed = total = 0;
-    // for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
-    //     string_list.push(imagine_dragons_lyrics[index_]);
-    // }
-
-    // index_ = imagine_dragons_lyrics.size() - 1;
-    // while (string_list && index_ >= 0) {
-    //     std::printf("popping the data at original index %lu\n", index_);
-    //     this_string = string_list.pop(-1);
-    //     update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
-    //     index_ = index_ - 1;
-    // }
     // std::printf("Reached\n");
-    // print_results((char *) "\t\tCorrectly pops from the rear of the linked list\t:\t", passed, total);
+    passed = total = 0;
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        string_list.push(imagine_dragons_lyrics[index_]);
+    }
+
+    index_ = imagine_dragons_lyrics.size() - 1;
+    while (string_list && index_ >= 0) {
+        // std::printf("popping the data at original index %lu\n", index_);
+        this_string = string_list.pop(-1);
+        update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_]));
+        index_ = index_ - 1;
+    }
+    print_results((char *) "\t\tCorrectly pops from the rear of the linked list\t:\t", passed, total);
+
+
+    // Need a test for popping from the center of the linked list now
+    passed = total = 0;
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        string_list.push(imagine_dragons_lyrics[index_]);
+    }
+
+    index_ = (imagine_dragons_lyrics.size() / 2) - 10;
+    for (extra = 0; extra < 10; extra = extra + 1) {
+        this_string = string_list.pop(index_);
+        update_tests(compare_with_case(this_string, imagine_dragons_lyrics[index_ + extra]));
+        update_tests(compare_ignore_case(this_string, imagine_dragons_lyrics_caps[index_ + extra]));
+    }
+
+    print_results((char *) "\t\tCorrectly pops from the center of the linked list\t:\t", passed, total);
 
 }

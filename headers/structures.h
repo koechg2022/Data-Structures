@@ -237,8 +237,6 @@ namespace Data_Structures {
 
     }
 
-
-
     /**
      * @brief The Data structure that stores data in nodes that hold the data and point to the next node.
      * 
@@ -948,7 +946,6 @@ namespace Data_Structures {
                 return the_answer;
             }
     };
-
 
     template <typename data_> class list_iterator {
 

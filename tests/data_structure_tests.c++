@@ -199,7 +199,7 @@ void update_tests(bool the_test) {
 
 void linked_list_tests() {
 
-    std::printf("length is %lu\n", std::string((char *) "Correctly initialized a std::string linked list	:\t").length());
+    // std::printf("length is %lu\n", std::string((char *) "Correctly initialized a std::string linked list	:\t").length());
     std::printf("linked list tests:\n");
     passed = total = 0;
     Data_Structures::linked_list<std::string> string_list;

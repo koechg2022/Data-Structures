@@ -211,10 +211,9 @@ namespace Data_Structures {
                     this->next = nullptr;
                 }
 
-                single_linear_node(const single_linear_node<data_>* other) {
-                    if (this != &other) {
-                        this = &other;
-                    }
+                single_linear_node(const single_linear_node<data_>& other) {
+                    this->set_data(other.get_data());
+                    this->next = other.get_next();
                 }
 
                 void update_next(single_linear_node<data_>* new_next) {
@@ -225,27 +224,13 @@ namespace Data_Structures {
                     return this->next;
                 }
 
-                single_linear_node<data_>* operator=(single_linear_node<data_>* other) {
-                    if (this != other) {
-                        this = other;
+                single_linear_node<data_>& operator=(const single_linear_node<data_>& other) {
+                    if (this != &other) {
+                        this->set_data(other.get_data());
+                        this->next = other.get_next();
                     }
-                    return this;
-                }
-
-                single_linear_node<data_>* operator++() {
-                    if (this->next) {
-                        return this->next;
-                    }
-                    return nullptr;
-                }
-
-                single_linear_node<data_>* operator++(int) {
-                    if (this->next == nullptr) {
-                        return nullptr;
-                    }
-                    single_linear_node<data_>* this_node = this;
-                    this = this->next;
-                    return this_node;
+                    // std::printf("In single_linear_node<data_>& operator=() method\n");
+                    return *this;
                 }
 
         };
@@ -479,7 +464,7 @@ namespace Data_Structures {
 
                 else {
                     unsigned long this_index;
-                    single_linear_node<data_>* this_node;
+                    single_linear_node<data_>* this_node;                                                           // this_node = this_node->get_next()
                     for (this_node = this->head, this_index = 0; this_index < push_index - 1 && this_node != nullptr; this_node = this_node->get_next(), this_index = this_index + 1);
 
                     if (this_index + 1 != push_index) {

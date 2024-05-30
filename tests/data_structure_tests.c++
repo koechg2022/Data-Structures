@@ -385,5 +385,26 @@ void linked_list_tests() {
     }
 
     print_results((char *) "\t\tCorrectly pops data from the front of an unsigned long linked list\t:\t", passed, total);
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        unsigned_list.push(imagine_dragons_lyrics[index_].length());
+    }
+    passed = total = 0;
+    Data_Structures::linked_list<unsigned long> copied_unsigned = unsigned_list;
+    update_tests(copied_unsigned.length() == unsigned_list.length());
+    update_tests(copied_unsigned.empty() == unsigned_list.empty());
+    update_tests(copied_unsigned.throws_and_distructs() == unsigned_list.throws_and_distructs());
+    index_ = 0;
+    while (copied_unsigned && unsigned_list) {
+        extra = copied_unsigned.pop();
+        other_extra = unsigned_list.pop();
+        update_tests(extra == other_extra);
+        update_tests(imagine_dragons_lyrics[index_].length() == extra);
+        update_tests(imagine_dragons_lyrics[index_].length() == other_extra);
+        update_tests(imagine_dragons_lyrics[index_].length() == extra);
+        update_tests(imagine_dragons_lyrics_caps[index_].length() == other_extra);
+        index_ = index_ + 1;
+    }
+
+    print_results((char *) "\t\tCorrectly initializes a linked list that was assigned another linked list\t:\t", passed, total);
 
 }

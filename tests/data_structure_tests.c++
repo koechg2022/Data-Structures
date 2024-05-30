@@ -31,7 +31,7 @@ std::vector<unsigned long> line_lengths;
 
 void init();
 
-void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl = true);
+void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl = true, unsigned long len_to_nums = 180, char shift_char = '.');
 
 bool compare_with_case(std::string& first, std::string& second);
 
@@ -44,7 +44,6 @@ void linked_list_tests();
 int main() {
     init();
     linked_list_tests();
-    // std::printf("REACHED\n");
     print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
 }
 
@@ -162,11 +161,20 @@ void init() {
     }
 }
 
-void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl) {
+void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl, unsigned long len_to_nums, char shift_char) {
+    unsigned long this_index, str_len = std::string(the_string).length();
     #if defined(unix_os)
-        std::printf("\x1B[1;%u;49m%s%lu / %lu\x1B[0m%c", (pass == tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string, pass, tot, (nl) ? '\n' : 0);
+        std::printf("\x1B[1;%u;49m%s", (pass = tot) ? GREEN : (pass == 0) ? RED : YELLOW, the_string);
+        for (this_index = str_len; this_index < len_to_nums; this_index = this_index + 1) {
+            std::printf("%c", shift_char);
+        }
+        std::printf("%lu / %lu\x1B[0m%c", pass, tot, (nl) ? '\n' : 0);
     #else
-        std::printf("%s%lu/%lu%c", the_string, pass, tot, (nl) ? '\n' : 0);
+        std::printf("%s");
+        for (this_index = str_len; this_index < len_to_nums; this_index = this_index + 1) {
+            std::printf("%c", shift_char);
+        }
+        std::printf("%lu / %lu%c", pass, tot, (nl) ? '\n' : 0);
     #endif
 }
 
@@ -191,6 +199,7 @@ void update_tests(bool the_test) {
 
 void linked_list_tests() {
 
+    std::printf("length is %lu\n", std::string((char *) "Correctly initialized a std::string linked list	:\t").length());
     std::printf("linked list tests:\n");
     passed = total = 0;
     Data_Structures::linked_list<std::string> string_list;
@@ -290,7 +299,7 @@ void linked_list_tests() {
         update_tests(string_list.push(imagine_dragons_lyrics[index_]));
     }
     // list is filled
-    // std::printf("string_list.length()\t:\t%lu\n", string_list.length());
+    // std::printf("string_list.length()\t:%lu\n", string_list.length());
     for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
         update_tests(compare_with_case(imagine_dragons_lyrics[imagine_dragons_lyrics.size() - index_ - 1], string_list[ (((signed long) index_) + 1) * -1 ]));
     }
@@ -348,5 +357,33 @@ void linked_list_tests() {
     
     print_results((char *) "\t\tCorrectly initializes an unsigned long linked list\t:\t", passed, total);
 
+    passed = total = 0;
+    for (index_ = 0; index_ < imagine_dragons_lyrics.size(); index_ = index_ + 1) {
+        unsigned_list.push(imagine_dragons_lyrics[index_].length());
+    }
+
+    update_tests(unsigned_list.length() == imagine_dragons_lyrics.size());
+    update_tests(!unsigned_list.empty());
+    update_tests(unsigned_list.throws_and_distructs());
+
+    print_results((char *) "\t\tCorrectly fills an unsigned long linked list to the proper size\t:\t", passed, total);
+
+    passed = total = 0;
+    for (index_ = 0; index_ < unsigned_list.length(); index_ = index_ + 1) {
+        update_tests(unsigned_list[index_] == imagine_dragons_lyrics[index_].length());
+        update_tests(unsigned_list[index_] == imagine_dragons_lyrics_caps[index_].length());
+    }
+
+    print_results((char *) "\t\tCorrectly fills an unsigned long linked list with the proper data at the proper location\t:\t", passed, total);
+
+    index_ = passed = total = 0;
+    while (unsigned_list) {
+        extra = unsigned_list.pop();
+        update_tests(extra == imagine_dragons_lyrics[index_].length());
+        update_tests(extra == imagine_dragons_lyrics_caps[index_].length());
+        index_ = index_ + 1;
+    }
+
+    print_results((char *) "\t\tCorrectly pops data from an unsigned long linked list\t:\t", passed, total);
 
 }

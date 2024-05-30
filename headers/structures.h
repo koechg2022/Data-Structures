@@ -233,14 +233,18 @@ namespace Data_Structures {
                 }
 
                 single_linear_node<data_>* operator++() {
-                    // single_linear_node<data_>* this_node = this;
-                    this = this->next;
-                    return this;
+                    if (this->next) {
+                        return this->next;
+                    }
+                    return nullptr;
                 }
 
                 single_linear_node<data_>* operator++(int) {
+                    if (this->next == nullptr) {
+                        return nullptr;
+                    }
                     single_linear_node<data_>* this_node = this;
-                    ++(this);
+                    this = this->next;
                     return this_node;
                 }
 

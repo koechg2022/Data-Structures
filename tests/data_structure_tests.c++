@@ -44,7 +44,7 @@ void linked_list_tests();
 int main() {
     init();
     linked_list_tests();
-    print_results((char *) "\tlinked_list tests\t:\t", total_pass, total_total);
+    print_results((char *) "\tlinked_list tests:\t\t\t", total_pass, total_total);
 }
 
 
@@ -168,13 +168,13 @@ void print_results(char* the_string, unsigned long pass, unsigned long tot, bool
         for (this_index = str_len; this_index < len_to_nums; this_index = this_index + 1) {
             std::printf("%c", shift_char);
         }
-        std::printf("%lu / %lu\x1B[0m%c", pass, tot, (nl) ? '\n' : 0);
+        std::printf("\t%lu / %lu\x1B[0m%c", pass, tot, (nl) ? '\n' : 0);
     #else
         std::printf("%s");
         for (this_index = str_len; this_index < len_to_nums; this_index = this_index + 1) {
             std::printf("%c", shift_char);
         }
-        std::printf("%lu / %lu%c", pass, tot, (nl) ? '\n' : 0);
+        std::printf("\t%lu / %lu%c", pass, tot, (nl) ? '\n' : 0);
     #endif
 }
 
@@ -384,6 +384,6 @@ void linked_list_tests() {
         index_ = index_ + 1;
     }
 
-    print_results((char *) "\t\tCorrectly pops data from an unsigned long linked list\t:\t", passed, total);
+    print_results((char *) "\t\tCorrectly pops data from the front of an unsigned long linked list\t:\t", passed, total);
 
 }

@@ -698,7 +698,7 @@ namespace Data_Structures {
             list_iterator(const stack<data_>& the_stack) {
                 this->this_node = the_stack.head;
                 this->this_index = 0;
-                return *this;
+                // return *this;
             }
 
             list_iterator<data_>& operator=(const stack<data_>& the_stack) {

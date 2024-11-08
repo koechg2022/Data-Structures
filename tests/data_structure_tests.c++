@@ -170,7 +170,7 @@ void print_results(char* the_string, unsigned long pass, unsigned long tot, bool
         }
         std::printf("\t%lu / %lu\x1B[0m%c", pass, tot, (nl) ? '\n' : 0);
     #else
-        std::printf("%s");
+        std::printf("%s", the_string);
         for (this_index = str_len; this_index < len_to_nums; this_index = this_index + 1) {
             std::printf("%c", shift_char);
         }

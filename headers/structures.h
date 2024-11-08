@@ -681,7 +681,7 @@ namespace Data_Structures {
 
             list_iterator() {
                 this_node = nullptr;
-                this->size = 0;
+                this->this_index = 0;
             }
 
             list_iterator(const linked_list<data_>& list) {

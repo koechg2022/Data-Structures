@@ -31,7 +31,7 @@ std::vector<unsigned long> line_lengths;
 
 void init();
 
-void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl = true, unsigned long len_to_nums = 180, char shift_char = '.');
+void print_results(char* the_string, unsigned long pass, unsigned long tot, bool nl = true, unsigned long len_to_nums = 90, char shift_char = '.');
 
 bool compare_with_case(std::string& first, std::string& second);
 

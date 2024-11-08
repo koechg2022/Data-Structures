@@ -8,4 +8,4 @@ I was also able to add some color to the test result displays on Unix machines, 
 
 *NOTE*
 
-On linux, the **clang++** compiler has been known to fail with importing the ** <vector> ** header (used for testing), however the **g++** compiler has worked well.
+On linux, the **clang++** compiler has been known to fail with importing the **vector** header (used for testing), however the **g++** compiler has worked well.
